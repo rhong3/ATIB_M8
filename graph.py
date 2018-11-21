@@ -129,6 +129,13 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     updatedmap, nsloc, nploc, nrdloc = update(Sloc, RDloc, Ploc, result, sz, Srepro, RDrepro, Prepro, r)
     updatedmap_view = updatedmap.repeat(5, axis=0).repeat(5, axis=1)
     cv2.imwrite('result-1.png', updatedmap_view)
+
+    height, width, layers = updatedmap_view.shape
+    result_video = cv2.VideoWriter('result_video.avi', -1, 1, (width, height))
+
+    height, width, layers = result_view.shape
+    process_video = cv2.VideoWriter('process_video.avi', -1, 1, (width, height))
+
     for i in range(round-1):
         S = new_graph(nsloc, sz, Pr, RDr, 2)
         RD = new_graph(nrdloc, sz, Pr, RDr, 1)
@@ -136,9 +143,16 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
         new = np.multiply((S+RD-1), P)
         new_view = new.repeat(5, axis=0).repeat(5, axis=1)
         cv2.imwrite('round-{}.png'.format(str(i+2)), new_view)
+        pimg = cv2.imread('round-{}.png'.format(str(i+2)))
+        process_video.write(pimg)
+
         updatedmap, nsloc, nploc, nrdloc = update(nsloc, nrdloc, nploc, new, sz, Srepro, RDrepro, Prepro, r)
         updatedmap_view = updatedmap.repeat(5, axis=0).repeat(5, axis=1)
         cv2.imwrite('result-{}.png'.format(str(i+2)), updatedmap_view)
-
+        rimg = cv2.imread('result-{}.png'.format(str(i+2)))
+        result_video.write(rimg)
+    cv2.destroyAllWindows()
+    process_video.release()
+    result_video.release()
 
 main(30, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
