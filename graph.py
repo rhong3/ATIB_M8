@@ -63,29 +63,31 @@ def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
                 offspring = np.clip(offspring, 0, 200)
                 nsloc.append(offspring)
     for c in ploc:
-        mp[c[0], c[1], 2] = 0
-        mp[c[0], c[1], 1] = 1
-        mp[c[0], c[1], 0] = 255
-        nploc.append(c)
-        for j in range(reprop):
-            rand = np.random.randint(low=-r, high=r, size=2)
-            x = c[0] + rand[0]
-            y = c[1] + rand[1]
-            offspring = np.asarray([x, y])
-            offspring = np.clip(offspring, 0, 200)
-            nploc.append(offspring)
+        if mp[c[0], c[1], :].tolist() == [1, 1, 1]:
+            mp[c[0], c[1], 2] = 0
+            mp[c[0], c[1], 1] = 1
+            mp[c[0], c[1], 0] = 255
+            nploc.append(c)
+            for j in range(reprop):
+                rand = np.random.randint(low=-r, high=r, size=2)
+                x = c[0] + rand[0]
+                y = c[1] + rand[1]
+                offspring = np.asarray([x, y])
+                offspring = np.clip(offspring, 0, 200)
+                nploc.append(offspring)
     for b in rdloc:
-        mp[b[0], b[1], 2] = 0
-        mp[b[0], b[1], 1] = 255
-        mp[b[0], b[1], 0] = 0
-        nrdloc.append(b)
-        for j in range(reprord):
-            rand = np.random.randint(low=-r, high=r, size=2)
-            x = b[0] + rand[0]
-            y = b[1] + rand[1]
-            offspring = np.asarray([x, y])
-            offspring = np.clip(offspring, 0, 200)
-            nrdloc.append(offspring)
+        if mp[b[0], b[1], :].tolist() == [1, 1, 1]:
+            mp[b[0], b[1], 2] = 0
+            mp[b[0], b[1], 1] = 255
+            mp[b[0], b[1], 0] = 0
+            nrdloc.append(b)
+            for j in range(reprord):
+                rand = np.random.randint(low=-r, high=r, size=2)
+                x = b[0] + rand[0]
+                y = b[1] + rand[1]
+                offspring = np.asarray([x, y])
+                offspring = np.clip(offspring, 0, 200)
+                nrdloc.append(offspring)
     return mp, nsloc, nploc, nrdloc
 
 
@@ -139,4 +141,4 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
         cv2.imwrite('result-{}.png'.format(str(i+2)), updatedmap_view)
 
 
-main(10, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
+main(30, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
