@@ -50,7 +50,7 @@ def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
     nploc = []
     nrdloc = []
     for a in sloc:
-        if oldmp[a[0], a[1], 2] > 10:
+        if oldmp[a[0], a[1], 2] > 10 or oldmp[a[0], a[1], 1] > 10:
             mp[a[0], a[1], 2] = 255
             mp[a[0], a[1], 1] = 0
             mp[a[0], a[1], 0] = 0
