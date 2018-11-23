@@ -160,4 +160,4 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     result_video.release()
 
 
-main(20, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
+main(25, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
