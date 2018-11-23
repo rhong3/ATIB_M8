@@ -131,12 +131,12 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     cv2.imwrite('result-1.png', updatedmap_view)
 
     height, width, layers = updatedmap_view.shape
-    result_video = cv2.VideoWriter('result_video.mov', -1, 1, (width, height))
+    result_video = cv2.VideoWriter('result_video.avi', -1, 1, (width, height))
     rimg = cv2.imread('result-1.png')
     result_video.write(rimg)
 
     height, width, layers = result_view.shape
-    process_video = cv2.VideoWriter('process_video.mov', -1, 1, (width, height))
+    process_video = cv2.VideoWriter('process_video.avi', -1, 1, (width, height))
     pimg = cv2.imread('round-1.png')
     process_video.write(pimg)
 
