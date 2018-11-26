@@ -1,18 +1,25 @@
+"""
+Created on 11/20/2018
+
+@author: RH
+"""
+# This simulator is created by using the ideas of Extended Data Figure 3.
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np
 import cv2
 
 
-Pr = 6
-RDr = 3
-r = 4
-sz = 200
-Srepro = 1
-RDrepro = 1
-Prepro = 1
+Pr = 6  # Antibiotics radius of species P.
+RDr = 3  # Removing antibiotics radius of species RD
+r = 4  # Reproducing radius of all 3 species
+sz = 200  # Size of simulation graph
+Srepro = 1  # Number of offsprings produced by species S each round
+RDrepro = 1  # Number of offsprings produced by species RD each round
+Prepro = 1  # Number of offsprings produced by species P each round
 
 
+# Initialize the graph with 'num' of species randomly placed
 def init_placement(sz, num, x, Pr, RDr):
     mp = np.full((sz+1, sz+1, 3), 1)
     loc = []
@@ -44,6 +51,7 @@ def init_placement(sz, num, x, Pr, RDr):
     return mp, loc
 
 
+# Update the graph (simulation happens: killing, protection, reproducing)
 def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
     mp = np.full((sz+1, sz+1, 3), 1)
     nsloc = []
@@ -91,6 +99,7 @@ def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
     return mp, nsloc, nploc, nrdloc
 
 
+# Generate new graphs for next round based on the result of last round
 def new_graph(loc, sz, Pr, RDr, x):
     mp = np.full((sz+1, sz+1, 3), 1)
     for i in loc:
@@ -119,6 +128,7 @@ def new_graph(loc, sz, Pr, RDr, x):
     return mp
 
 
+# Main method. Save process and result graph of each round and eventually generate movies of simulation.
 def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     S, Sloc = init_placement(sz, init_num, 2, Pr, RDr)
     RD, RDloc = init_placement(sz, init_num, 1, Pr, RDr)
@@ -160,4 +170,5 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     result_video.release()
 
 
+# Run
 main(25, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
