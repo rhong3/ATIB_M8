@@ -170,5 +170,6 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
     result_video.release()
 
 
-# Run
-main(25, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
+if __name__ == "__main__":
+    # Run
+    main(25, 10, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
