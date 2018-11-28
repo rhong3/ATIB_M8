@@ -23,7 +23,7 @@ Brepro = 1  # Number of offsprings produced
 Crepro = 1  # Number of offsprings produced
 
 
-# Initialize the graph with 'num' of species randomly placed
+# Initialize the graph with 'num' of bacteria randomly placed
 def init_placement(sz, num, xt):
     Smp = np.full((sz+1, sz+1, 3), 1)
     Pmp = np.full((sz+1, sz+1, 3), 1)
