@@ -4,59 +4,111 @@ Created on 11/20/2018
 @author: RH
 """
 # This simulator is created by using the ideas of Extended Data Figure 3.
-import matplotlib
-matplotlib.use('Agg')
 import numpy as np
 import cv2
 
 
-Pr = 6  # Antibiotics radius of species P.
-RDr = 3  # Removing antibiotics radius of species RD
-r = 4  # Reproducing radius of all 3 species
 sz = 200  # Size of simulation graph
-Srepro = 1  # Number of offsprings produced by species S each round
-RDrepro = 1  # Number of offsprings produced by species RD each round
-Prepro = 1  # Number of offsprings produced by species P each round
+APr = 6  # Antibiotics radius
+BPr = 6  # Antibiotics radius
+CPr = 6  # Antibiotics radius
+ARDr = 3  # Degrading radius
+BRDr = 3  # Degrading radius
+CRDr = 3  # Degrading radius
+Ar = 4  # Reproducing radius
+Br = 4  # Reproducing radius
+Cr = 4  # Reproducing radius
+Arepro = 1  # Number of offsprings produced
+Brepro = 1  # Number of offsprings produced
+Crepro = 1  # Number of offsprings produced
 
 
 # Initialize the graph with 'num' of species randomly placed
 def init_placement(sz, num, x, Pr, RDr):
-    mp = np.full((sz+1, sz+1, 3), 1)
+    Smp = np.full((sz+1, sz+1, 3), 1)
+    Pmp = np.full((sz+1, sz+1, 3), 1)
+    RDmp = np.full((sz+1, sz+1, 3), 1)
     loc = []
     for i in range(num):
         rand = np.random.randint(sz, size=2)
-        if x == 2:
-            mp[rand[0], rand[1], x] = 255
-            mp[rand[0], rand[1], 0] = 0
-            mp[rand[0], rand[1], 1] = 0
-        elif x == 1:
-            mp[np.maximum((rand[0]-RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1]-RDr), 0):np.minimum((rand[1] + RDr), sz), x] = 255
+        if x == 'A':
+            Smp[rand[0], rand[1], 0] = 0
+            Smp[rand[0], rand[1], 1] = 1
+            Smp[rand[0], rand[1], 2] = 255
 
-            mp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
             np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 0
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 1
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 255
 
-            mp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 0
-        elif x == 0:
-            mp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), x] = 255
-
-            mp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 0
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
             np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 1
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 255
+        elif x == 'B':
+            Smp[rand[0], rand[1], 0] = 1
+            Smp[rand[0], rand[1], 1] = 255
+            Smp[rand[0], rand[1], 2] = 0
 
-            mp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 1
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 255
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 0
+
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 1
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 255
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
             np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 0
+        elif x == 'C':
+            Smp[rand[0], rand[1], 0] = 255
+            Smp[rand[0], rand[1], 1] = 0
+            Smp[rand[0], rand[1], 2] = 1
+
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 255
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 0
+            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 1
+
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 255
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 0
+            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 1
         loc.append(rand)
+        mp = [Smp, RDmp, Pmp]
     return mp, loc
 
 
-# Update the graph (simulation happens: killing, protection, reproducing)
-def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
-    mp = np.full((sz+1, sz+1, 3), 1)
-    nsloc = []
-    nploc = []
-    nrdloc = []
+def fuse(ASmp, BSmp, CSmp):
+    mpp = np.multiply(np.multiply(ASmp, BSmp), CSmp)
+    mpp_view = mpp.repeat(5, axis=0).repeat(5, axis=1)
+    return mpp_view
+
+
+# Simulation happens: killing, protection, reproducing
+def sim(Smp, RDmp, Pmp):
+    result = np.clip(np.multiply(np.clip((Smp+RDmp), a_max = 255, a_min = 0), Pmp), a_max = 255, a_min = 0)
+    result_view = result.repeat(5, axis=0).repeat(5, axis=1)
+    return result, result_view
+
+
+# Update the map for next round
+def update(loc, resultmp, r, repro):
+    Smp = np.full((sz + 1, sz + 1, 3), 1)
+    Pmp = np.full((sz + 1, sz + 1, 3), 1)
+    RDmp = np.full((sz + 1, sz + 1, 3), 1)
+    loc = []
     for a in sloc:
         if oldmp[a[0], a[1], 2] > 10 or oldmp[a[0], a[1], 1] > 10:
             mp[a[0], a[1], 2] = 255
@@ -96,7 +148,7 @@ def update(sloc, rdloc, ploc, oldmp, sz, repros, reprord, reprop, r):
             offspring = np.clip(offspring, 0, 200)
             if mp[offspring[0], offspring[1], :].tolist() == [1, 1, 1]:
                 nrdloc.append(offspring)
-    return mp, nsloc, nploc, nrdloc
+    return mp, loc
 
 
 # Generate new graphs for next round based on the result of last round
@@ -172,4 +224,4 @@ def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
 
 if __name__ == "__main__":
     # Run
-    main(20, 15, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
+    main(20, 1000, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
