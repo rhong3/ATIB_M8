@@ -24,69 +24,51 @@ Crepro = 1  # Number of offsprings produced
 
 
 # Initialize the graph with 'num' of species randomly placed
-def init_placement(sz, num, x, Pr, RDr):
+def init_placement(sz, num, x):
     Smp = np.full((sz+1, sz+1, 3), 1)
     Pmp = np.full((sz+1, sz+1, 3), 1)
     RDmp = np.full((sz+1, sz+1, 3), 1)
     loc = []
+    if x == 'A':
+        cl = [0, 1, 255]
+        Pr = APr
+        RDr = ARDr
+    elif x == 'B':
+        cl = [1, 255, 0]
+        Pr = BPr
+        RDr = BRDr
+    elif x == 'C':
+        cl = [255, 0, 1]
+        Pr = CPr
+        RDr = CRDr
+    else:
+        print('Error!')
+        cl = [0,0,0]
+        Pr = 0
+        RDr = 0
     for i in range(num):
         rand = np.random.randint(sz, size=2)
-        if x == 'A':
-            Smp[rand[0], rand[1], 0] = 0
-            Smp[rand[0], rand[1], 1] = 1
-            Smp[rand[0], rand[1], 2] = 255
+        Smp[rand[0], rand[1], 0] = cl[0]
+        Smp[rand[0], rand[1], 1] = cl[1]
+        Smp[rand[0], rand[1], 2] = cl[2]
 
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 0
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 1
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 255
+        RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+        np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = cl[0]
+        RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+        np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = cl[1]
+        RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
+        np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = cl[2]
 
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 0
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 1
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 255
-        elif x == 'B':
-            Smp[rand[0], rand[1], 0] = 1
-            Smp[rand[0], rand[1], 1] = 255
-            Smp[rand[0], rand[1], 2] = 0
+        Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+        np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = cl[0]
+        Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+        np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = cl[1]
+        Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
+        np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = cl[2]
 
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 1
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 255
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 0
-
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 1
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 255
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 0
-        elif x == 'C':
-            Smp[rand[0], rand[1], 0] = 255
-            Smp[rand[0], rand[1], 1] = 0
-            Smp[rand[0], rand[1], 2] = 1
-
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 0] = 255
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 1] = 0
-            RDmp[np.maximum((rand[0] - RDr), 0):np.minimum((rand[0] + RDr), sz),
-            np.maximum((rand[1] - RDr), 0):np.minimum((rand[1] + RDr), sz), 2] = 1
-
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 0] = 255
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 1] = 0
-            Pmp[np.maximum((rand[0] - Pr), 0):np.minimum((rand[0] + Pr), sz),
-            np.maximum((rand[1] - Pr), 0):np.minimum((rand[1] + Pr), sz), 2] = 1
         loc.append(rand)
-        mp = [Smp, RDmp, Pmp]
+
+    mp = [Smp, RDmp, Pmp]
     return mp, loc
 
 
@@ -104,124 +86,141 @@ def sim(Smp, RDmp, Pmp):
 
 
 # Update the map for next round
-def update(loc, resultmp, r, repro):
+def update(x, loc, resultmp):
     Smp = np.full((sz + 1, sz + 1, 3), 1)
     Pmp = np.full((sz + 1, sz + 1, 3), 1)
     RDmp = np.full((sz + 1, sz + 1, 3), 1)
-    loc = []
-    for a in sloc:
-        if oldmp[a[0], a[1], 2] > 10 or oldmp[a[0], a[1], 1] > 10:
-            mp[a[0], a[1], 2] = 255
-            mp[a[0], a[1], 1] = 0
-            mp[a[0], a[1], 0] = 0
-            nsloc.append(a)
-            for i in range(repros):
+    newloc = []
+    if x == 'A':
+        cl = [0, 1, 255]
+        r = Ar
+        repro = Arepro
+        Pr = APr
+        RDr = ARDr
+    elif x == 'B':
+        cl = [1, 255, 0]
+        r = Br
+        repro = Brepro
+        Pr = BPr
+        RDr = BRDr
+    elif x == 'C':
+        cl = [255, 0, 1]
+        r = Cr
+        repro = Crepro
+        Pr = CPr
+        RDr = CRDr
+    else:
+        print('Error!')
+        cl = [0,0,0]
+        r = 0
+        repro = 0
+        Pr = 0
+        RDr = 0
+    for a in loc:
+        if x == 'A':
+            det = resultmp[a[0], a[1], 0] == 255 or resultmp[a[0], a[1], 1] == 2
+        elif x == 'B':
+            det = resultmp[a[0], a[1], 2] == 255 or resultmp[a[0], a[1], 0] == 2
+        elif x == 'C':
+            det = resultmp[a[0], a[1], 1] == 255 or resultmp[a[0], a[1], 2] == 2
+        else:
+            print('Error!')
+            det = False
+        if det:
+            Smp[a[0], a[1], 0] = cl[0]
+            Smp[a[0], a[1], 1] = cl[1]
+            Smp[a[0], a[1], 2] = cl[2]
+
+            RDmp[np.maximum((a[0] - RDr), 0):np.minimum((a[0] + RDr), sz),
+            np.maximum((a[1] - RDr), 0):np.minimum((a[1] + RDr), sz), 0] = cl[0]
+            RDmp[np.maximum((a[0] - RDr), 0):np.minimum((a[0] + RDr), sz),
+            np.maximum((a[1] - RDr), 0):np.minimum((a[1] + RDr), sz), 1] = cl[1]
+            RDmp[np.maximum((a[0] - RDr), 0):np.minimum((a[0] + RDr), sz),
+            np.maximum((a[1] - RDr), 0):np.minimum((a[1] + RDr), sz), 2] = cl[2]
+
+            Pmp[np.maximum((a[0] - Pr), 0):np.minimum((a[0] + Pr), sz),
+            np.maximum((a[1] - Pr), 0):np.minimum((a[1] + Pr), sz), 0] = cl[0]
+            Pmp[np.maximum((a[0] - Pr), 0):np.minimum((a[0] + Pr), sz),
+            np.maximum((a[1] - Pr), 0):np.minimum((a[1] + Pr), sz), 1] = cl[1]
+            Pmp[np.maximum((a[0] - Pr), 0):np.minimum((a[0] + Pr), sz),
+            np.maximum((a[1] - Pr), 0):np.minimum((a[1] + Pr), sz), 2] = cl[2]
+
+            newloc.append(a)
+            for i in range(repro):
                 rand = np.random.randint(low=-r, high=r, size=2)
                 x = a[0]+rand[0]
                 y = a[1]+rand[1]
                 offspring = np.asarray([x,y])
                 offspring = np.clip(offspring, 0, 200)
-                nsloc.append(offspring)
-    for c in ploc:
-        nploc.append(c)
-        mp[c[0], c[1], 2] = 0
-        mp[c[0], c[1], 1] = 1
-        mp[c[0], c[1], 0] = 255
-        for j in range(reprop):
-            rand = np.random.randint(low=-r, high=r, size=2)
-            x = c[0] + rand[0]
-            y = c[1] + rand[1]
-            offspring = np.asarray([x, y])
-            offspring = np.clip(offspring, 0, 200)
-            if mp[offspring[0], offspring[1], :].tolist() == [1, 1, 1]:
-                nploc.append(offspring)
-    for b in rdloc:
-        nrdloc.append(b)
-        mp[b[0], b[1], 2] = 0
-        mp[b[0], b[1], 1] = 255
-        mp[b[0], b[1], 0] = 0
-        for j in range(reprord):
-            rand = np.random.randint(low=-r, high=r, size=2)
-            x = b[0] + rand[0]
-            y = b[1] + rand[1]
-            offspring = np.asarray([x, y])
-            offspring = np.clip(offspring, 0, 200)
-            if mp[offspring[0], offspring[1], :].tolist() == [1, 1, 1]:
-                nrdloc.append(offspring)
-    return mp, loc
+
+                Smp[x, y, 0] = cl[0]
+                Smp[x, y, 1] = cl[1]
+                Smp[x, y, 2] = cl[2]
+
+                RDmp[np.maximum((x - RDr), 0):np.minimum((x + RDr), sz),
+                np.maximum((y - RDr), 0):np.minimum((y + RDr), sz), 0] = cl[0]
+                RDmp[np.maximum((x - RDr), 0):np.minimum((x + RDr), sz),
+                np.maximum((y - RDr), 0):np.minimum((y + RDr), sz), 1] = cl[1]
+                RDmp[np.maximum((x - RDr), 0):np.minimum((x + RDr), sz),
+                np.maximum((y - RDr), 0):np.minimum((y + RDr), sz), 2] = cl[2]
+
+                Pmp[np.maximum((x - Pr), 0):np.minimum((x + Pr), sz),
+                np.maximum((y - Pr), 0):np.minimum((y+ Pr), sz), 0] = cl[0]
+                Pmp[np.maximum((x - Pr), 0):np.minimum((x + Pr), sz),
+                np.maximum((y - Pr), 0):np.minimum((y + Pr), sz), 1] = cl[1]
+                Pmp[np.maximum((x - Pr), 0):np.minimum((x + Pr), sz),
+                np.maximum((y - Pr), 0):np.minimum((y + Pr), sz), 2] = cl[2]
+
+                newloc.append(offspring)
+    mp = [Smp, RDmp, Pmp]
+    return mp, newloc
 
 
-# Generate new graphs for next round based on the result of last round
-def new_graph(loc, sz, Pr, RDr, x):
-    mp = np.full((sz+1, sz+1, 3), 1)
-    for i in loc:
-        if x == 2:
-            mp[i[0], i[1], x] = 255
-            mp[i[0], i[1], 0] = 0
-            mp[i[0], i[1], 1] = 0
-        elif x == 1:
-            mp[np.maximum((i[0]-RDr), 0):np.minimum((i[0] + RDr), sz),
-            np.maximum((i[1]-RDr), 0):np.minimum((i[1] + RDr), sz), x] = 255
+# MAIN METHOD
+def main(round, sz, num):
+    mpA, locA = init_placement(sz, num, 'A')
+    mpB, locB = init_placement(sz, num, 'B')
+    mpC, locC = init_placement(sz, num, 'C')
+    result = fuse(mpA[0], mpB[0], mpC[0])
+    cv2.imwrite('Triangle/1.png', result)
 
-            mp[np.maximum((i[0] - RDr), 0):np.minimum((i[0] + RDr), sz),
-            np.maximum((i[1] - RDr), 0):np.minimum((i[1] + RDr), sz), 0] = 0
-
-            mp[np.maximum((i[0] - RDr), 0):np.minimum((i[0] + RDr), sz),
-            np.maximum((i[1] - RDr), 0):np.minimum((i[1] + RDr), sz), 2] = 0
-        elif x == 0:
-            mp[np.maximum((i[0] - Pr), 0):np.minimum((i[0] + Pr), sz),
-            np.maximum((i[1] - Pr), 0):np.minimum((i[1] + Pr), sz), x] = 255
-
-            mp[np.maximum((i[0] - Pr), 0):np.minimum((i[0] + Pr), sz),
-            np.maximum((i[1] - Pr), 0):np.minimum((i[1] + Pr), sz), 1] = 1
-
-            mp[np.maximum((i[0] - Pr), 0):np.minimum((i[0] + Pr), sz),
-            np.maximum((i[1] - Pr), 0):np.minimum((i[1] + Pr), sz), 2] = 0
-    return mp
-
-
-# Main method. Save process and result graph of each round and eventually generate movies of simulation.
-def main(round, init_num, sz, Pr, RDr, Srepro, RDrepro, Prepro, r):
-    S, Sloc = init_placement(sz, init_num, 2, Pr, RDr)
-    RD, RDloc = init_placement(sz, init_num, 1, Pr, RDr)
-    P, Ploc = init_placement(sz, init_num, 0, Pr, RDr)
-    result = np.multiply((S+RD-1), P)
-    result_view = result.repeat(5, axis=0).repeat(5, axis=1)
-    cv2.imwrite('round-1.png', result_view)
-    updatedmap, nsloc, nploc, nrdloc = update(Sloc, RDloc, Ploc, result, sz, Srepro, RDrepro, Prepro, r)
-    updatedmap_view = updatedmap.repeat(5, axis=0).repeat(5, axis=1)
-    cv2.imwrite('result-1.png', updatedmap_view)
-
-    height, width, layers = updatedmap_view.shape
-    result_video = cv2.VideoWriter('result_video.mov', -1, 1, (width, height))
-    rimg = cv2.imread('result-1.png')
+    height, width, layers = result.shape
+    result_video = cv2.VideoWriter('Triangle/Result_video.mov', -1, 0.5, (width, height))
+    A_video = cv2.VideoWriter('Triangle/A_video.mov', -1, 0.5, (width, height))
+    B_video = cv2.VideoWriter('Triangle/B_video.mov', -1, 0.5, (width, height))
+    C_video = cv2.VideoWriter('Triangle/C_video.mov', -1, 0.5, (width, height))
+    rimg = cv2.imread('Triangle/1.png')
     result_video.write(rimg)
 
-    height, width, layers = result_view.shape
-    process_video = cv2.VideoWriter('process_video.mov', -1, 1, (width, height))
-    pimg = cv2.imread('round-1.png')
-    process_video.write(pimg)
+    for i in range(round):
+        Asim, Asim_view = sim(mpA[0], mpC[1], mpB[2])
+        Bsim, Bsim_view = sim(mpB[0], mpA[1], mpC[2])
+        Csim, Csim_view = sim(mpC[0], mpB[1], mpA[2])
+        cv2.imwrite('Triangle/A-{}.png'.format(str(i + 1)), Asim_view)
+        cv2.imwrite('Triangle/B-{}.png'.format(str(i + 1)), Bsim_view)
+        cv2.imwrite('Triangle/C-{}.png'.format(str(i + 1)), Csim_view)
+        Aimg = cv2.imread('Triangle/A-{}.png'.format(str(i+1)))
+        Bimg = cv2.imread('Triangle/B-{}.png'.format(str(i+1)))
+        Cimg = cv2.imread('Triangle/C-{}.png'.format(str(i+1)))
+        A_video.write(Aimg)
+        B_video.write(Bimg)
+        C_video.write(Cimg)
 
-    for i in range(round-1):
-        S = new_graph(nsloc, sz, Pr, RDr, 2)
-        RD = new_graph(nrdloc, sz, Pr, RDr, 1)
-        P = new_graph(nploc, sz, Pr, RDr, 0)
-        new = np.multiply((S+RD-1), P)
-        new_view = new.repeat(5, axis=0).repeat(5, axis=1)
-        cv2.imwrite('round-{}.png'.format(str(i+2)), new_view)
-        pimg = cv2.imread('round-{}.png'.format(str(i+2)))
-        process_video.write(pimg)
-
-        updatedmap, nsloc, nploc, nrdloc = update(nsloc, nrdloc, nploc, new, sz, Srepro, RDrepro, Prepro, r)
-        updatedmap_view = updatedmap.repeat(5, axis=0).repeat(5, axis=1)
-        cv2.imwrite('result-{}.png'.format(str(i+2)), updatedmap_view)
-        rimg = cv2.imread('result-{}.png'.format(str(i+2)))
+        mpA, locA = update('A', locA, Asim)
+        mpB, locB = update('B', locB, Bsim)
+        mpC, locC = update('C', locC, Csim)
+        result = fuse(mpA[0], mpB[0], mpC[0])
+        cv2.imwrite('Triangle/{}.png'.format(str(i+2)), result)
+        rimg = cv2.imread('Triangle/{}.png'.format(str(i+2)))
         result_video.write(rimg)
+
     cv2.destroyAllWindows()
-    process_video.release()
+    A_video.release()
+    B_video.release()
+    C_video.release()
     result_video.release()
 
 
 if __name__ == "__main__":
     # Run
-    main(20, 1000, sz, Pr, RDr, Srepro, RDrepro, Prepro, r)
+    main(20, sz, 100)
