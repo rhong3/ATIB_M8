@@ -185,10 +185,10 @@ def main(round, sz, num):
     cv2.imwrite('Triangle/1.png', result)
 
     height, width, layers = result.shape
-    result_video = cv2.VideoWriter('Triangle/Result_video.mov', -1, 0.5, (width, height))
-    A_video = cv2.VideoWriter('Triangle/A_video.mov', -1, 0.5, (width, height))
-    B_video = cv2.VideoWriter('Triangle/B_video.mov', -1, 0.5, (width, height))
-    C_video = cv2.VideoWriter('Triangle/C_video.mov', -1, 0.5, (width, height))
+    result_video = cv2.VideoWriter('Triangle/Result_video.mov', -1, 1, (width, height))
+    A_video = cv2.VideoWriter('Triangle/A_video.mov', -1, 1, (width, height))
+    B_video = cv2.VideoWriter('Triangle/B_video.mov', -1, 1, (width, height))
+    C_video = cv2.VideoWriter('Triangle/C_video.mov', -1, 1, (width, height))
     rimg = cv2.imread('Triangle/1.png')
     result_video.write(rimg)
 
